@@ -1,5 +1,5 @@
 ﻿
-namespace BlobStorageV12ConsoleApp.Model
+namespace BlobStorageV12.Core.Model
 {
     public class StorageConfiguration
     {

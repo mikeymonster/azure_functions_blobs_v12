@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Queues;
-using BlobStorageV12ConsoleApp.Model;
+using BlobStorageV12.Core.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace BlobStorageV12ConsoleApp.Services
+namespace BlobStorageV12.Core.Services
 {
     public interface IBlobUploadService
     {
@@ -29,9 +29,9 @@ namespace BlobStorageV12ConsoleApp.Services
             _storageConfiguration = storageConfiguration?.Value ?? throw new ArgumentNullException(nameof(storageConfiguration));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            _logger.LogInformation($"BlobUploadService:: Azure Web Jobs Connection = {_storageConfiguration.AzureWebJobsStorage}");
-            _logger.LogInformation($"BlobUploadService:: Blob Storage Connection = {_storageConfiguration.BlobStorageConnectionString}");
-            _logger.LogInformation($"BlobUploadService:: Queue Storage Connection = {_storageConfiguration.QueueStorageConnectionString}");
+            //_logger.LogInformation($"BlobUploadService:: Azure Web Jobs Connection = {_storageConfiguration.AzureWebJobsStorage}");
+            //_logger.LogInformation($"BlobUploadService:: Blob Storage Connection = {_storageConfiguration.BlobStorageConnectionString}");
+            //_logger.LogInformation($"BlobUploadService:: Queue Storage Connection = {_storageConfiguration.QueueStorageConnectionString}");
         }
 
         public async Task UploadFile(string path, string blobContainerName, string contentType)
@@ -46,7 +46,7 @@ namespace BlobStorageV12ConsoleApp.Services
             var blobClient = await GetBlobClient(
                 blobContainerName.ToLowerInvariant(),
                 fileName);
-            
+
             var metadata = GetMetadata();
             //Upload blob
             var blobContentInfo = await blobClient.UploadAsync(fileStream,

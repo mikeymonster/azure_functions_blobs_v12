@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlobStorageV12ConsoleApp.Model
+﻿namespace BlobStorageV12.Core.Model
 {
     public class BlobInfoMessage
     {
