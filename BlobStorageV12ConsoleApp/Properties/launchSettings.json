@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BlobStorageV12ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\mike\\OneDrive\\Documents\\test.txt\""
+    }
+  }
+}
