@@ -3,7 +3,9 @@ namespace BlobStorageV12ConsoleApp.Configuration
 {
     public class StorageConfiguration
     {
-        public string AzureWebJobsStorage { get; set; }
-        public string BlobStorageConnectionString { get; set; }
+        // ReSharper disable UnusedAutoPropertyAccessor.Global
+        public string AzureWebJobsStorage { get; init; }
+        public string BlobStorageConnectionString { get; init; }
+        // ReSharper restore UnusedAutoPropertyAccessor.Global
     }
 }

@@ -24,8 +24,8 @@ namespace BlobStorageV12ConsoleApp.Services
             ILogger<BlobUploadService> logger,
             IOptions<StorageConfiguration> storageConfiguration)
         {
-            _storageConfiguration = storageConfiguration?.Value;
-            _logger = logger;
+            _storageConfiguration = storageConfiguration?.Value ?? throw new ArgumentNullException(nameof(storageConfiguration));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             _logger.LogInformation($"BlobUploadService:: Azure Web Jobs Connection = {_storageConfiguration.AzureWebJobsStorage}");
             _logger.LogInformation($"BlobUploadService:: Blog Storage Connection = {_storageConfiguration.BlobStorageConnectionString}");

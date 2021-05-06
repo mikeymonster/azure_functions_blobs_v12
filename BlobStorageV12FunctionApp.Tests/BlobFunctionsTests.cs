@@ -1,5 +1,3 @@
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using BlobStorageV12FunctionApp.Tests.Builders;
 using Xunit;

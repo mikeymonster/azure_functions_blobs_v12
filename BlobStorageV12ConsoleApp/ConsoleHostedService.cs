@@ -19,9 +19,9 @@ namespace BlobStorageV12ConsoleApp
             IHostApplicationLifetime appLifetime,
             IBlobUploadService blobUploadService)
         {
-            _logger = logger;
-            _appLifetime = appLifetime;
-            _blobUploadService = blobUploadService;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _appLifetime = appLifetime ?? throw new ArgumentNullException(nameof(appLifetime));
+            _blobUploadService = blobUploadService ?? throw new ArgumentNullException(nameof(blobUploadService));
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace BlobStorageV12ConsoleApp
 
                         // Simulate real work is being done
                         //await Task.Delay(1000);
-                        string filePath = null;
+                        string filePath;
                         if (args.Length >= 2)
                         {
                             //Second arg is the file name, because first is the executable being run

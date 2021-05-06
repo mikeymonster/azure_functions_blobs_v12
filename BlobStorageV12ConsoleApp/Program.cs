@@ -11,7 +11,7 @@ await Host.CreateDefaultBuilder(args)
     .UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
     .ConfigureLogging(logging =>
     {
-        // Add any 3rd party loggers like NLog or Serilog
+        // Add any 3rd party loggers
     })
     .ConfigureServices((hostContext, services) =>
     {
