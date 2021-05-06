@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using BlobStorageV12ConsoleApp.Configuration;
+using Azure.Storage.Queues;
+using BlobStorageV12ConsoleApp.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -28,7 +30,8 @@ namespace BlobStorageV12ConsoleApp.Services
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             _logger.LogInformation($"BlobUploadService:: Azure Web Jobs Connection = {_storageConfiguration.AzureWebJobsStorage}");
-            _logger.LogInformation($"BlobUploadService:: Blog Storage Connection = {_storageConfiguration.BlobStorageConnectionString}");
+            _logger.LogInformation($"BlobUploadService:: Blob Storage Connection = {_storageConfiguration.BlobStorageConnectionString}");
+            _logger.LogInformation($"BlobUploadService:: Queue Storage Connection = {_storageConfiguration.QueueStorageConnectionString}");
         }
 
         public async Task UploadFile(string path, string blobContainerName, string contentType)
@@ -53,7 +56,20 @@ namespace BlobStorageV12ConsoleApp.Services
             _logger.LogInformation($"Uploaded blob {blobContainerName}/{fileName} with etag {blobContentInfo.Value.ETag}");
 
             //Send queue message
+            var queueName = $"{blobContainerName}-blob-queue";
+            var queueMessage = new BlobInfoMessage
+            {
+                ContainerName = blobContainerName,
+                FileName = fileName,
+                ETag = blobContentInfo.Value?.ETag.ToString(),
+                VersionId = blobContentInfo.Value?.VersionId,
+            };
+            var message = JsonSerializer.Serialize(queueMessage);
 
+            var queueClient = await GetQueueClient(queueName);
+            await queueClient.SendMessageAsync(message);
+
+            _logger.LogInformation($"Added Message to Message Queue {queueName} => {message}");
         }
 
         private async Task<BlobClient> GetBlobClient(
@@ -83,5 +99,19 @@ namespace BlobStorageV12ConsoleApp.Services
                 {"created_by", Environment.UserName}
             };
         }
+
+        private async Task<QueueClient> GetQueueClient(string queueName)
+        {
+            var queueClient = new QueueClient(_storageConfiguration.QueueStorageConnectionString, queueName,
+                new QueueClientOptions
+                {
+                    MessageEncoding = QueueMessageEncoding.Base64
+                });
+
+            await queueClient.CreateIfNotExistsAsync();
+
+            return queueClient;
+        }
+
     }
 }

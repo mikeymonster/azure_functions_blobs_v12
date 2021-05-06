@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Reflection;
-using BlobStorageV12ConsoleApp.Configuration;
 using BlobStorageV12ConsoleApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlobStorageV12ConsoleApp;
+using BlobStorageV12ConsoleApp.Model;
 
 //https://dfederm.com/building-a-console-app-with-.net-generic-host/
 await Host.CreateDefaultBuilder(args)
