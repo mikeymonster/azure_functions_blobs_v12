@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.9.0-beta.3" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.7.0-beta.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.1.21102.12" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0-preview.1.21102.12" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.9.0-beta.4" />
+    <PackageReference Include="Azure.Storage.Queues" Version="12.7.0-beta.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.3.21201.4" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0-preview.3.21201.4" />
   </ItemGroup>
 
 </Project>

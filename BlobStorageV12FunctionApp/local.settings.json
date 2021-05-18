@@ -3,6 +3,7 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "BlobStorageConnectionString": "UseDevelopmentStorage=true;"
+    "BlobStorageConnectionString": "UseDevelopmentStorage=true;",
+    "QueueStorageConnectionString": "UseDevelopmentStorage=true;"
   }
 }

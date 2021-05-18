@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using BlobStorageV12.Core.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -66,7 +67,7 @@ namespace BlobStorageV12FunctionApp
         [Function("BlobFunctionWithOutput")]
         [BlobOutput("blob-test-output/{name}-output.txt")]
         public async Task<string> Run(
-            [BlobTrigger(TestBlobContainer + "/{name}")] 
+            [Microsoft.Azure.Functions.Worker.BlobTrigger(TestBlobContainer + "/{name}")] 
             //string myTriggerItem, //Works for blob
             //byte[] bytes, //Works for blob
             //BlockBlobClient blockBlobClient,
@@ -97,7 +98,7 @@ namespace BlobStorageV12FunctionApp
 
             var blobProperties = await blobClient.GetPropertiesAsync();
 
-            logger.LogInformation($"Blob was been updated on: {blobProperties.Value.LastModified}");
+            logger.LogInformation($"Blob was updated on: {blobProperties.Value.LastModified}");
             if (blobProperties.Value.Metadata != null && blobProperties.Value.Metadata.Any())
             {
                 foreach (var (key, value) in blobProperties.Value.Metadata)
@@ -106,7 +107,7 @@ namespace BlobStorageV12FunctionApp
                 }
             }
 
-            logger.LogInformation("Blob was been updated on: {datetime}", blobProperties.Value.LastModified);
+            logger.LogInformation("Blob was updated on: {datetime}", blobProperties.Value.LastModified);
 
             await using var stream = await blobClient.OpenReadAsync();
             using var streamReader = new StreamReader(stream);
@@ -188,9 +189,9 @@ namespace BlobStorageV12FunctionApp
     }
         */
 
-        [Function("BlobFunctionWithStream")]
-        public void RunWithStream(
-            [BlobTrigger("sample-container/{name}")] byte[] bytes,
+        [Function("BlobFunctionWithBytes")]
+        public void RunWithBytes(
+            [Microsoft.Azure.Functions.Worker.BlobTrigger("sample-container/{name}")] byte[] bytes,
             string name,
             FunctionContext executionContext)
         {
@@ -208,6 +209,54 @@ namespace BlobStorageV12FunctionApp
             //using var blobStreamReader = new StreamReader(bytes);
 
             logger.LogInformation($"Blob sample-container/{name} has been updated with content: {content}");
+        }
+
+        [Function("QueuedBlob")]
+        public async Task QueuedBlob(
+            [QueueTrigger("to-be-queued-blob-queue")] string queueMessage,
+            //[BlobInput("to-be-queued/{queueTrigger}", FileAccess.Read)] byte[] blob,
+            FunctionContext executionContext)
+        {
+            var logger = executionContext.GetLogger("BlobFunction");
+            
+            logger.LogInformation($"Have queued message '{queueMessage}'");
+            
+            var message = System.Text.Json.JsonSerializer.Deserialize<BlobInfoMessage>(queueMessage);
+
+
+            var connectionString = Environment.GetEnvironmentVariable(BlobConnection);
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                connectionString = "UseDevelopmentStorage=true";
+            }
+
+
+            var blobServiceClient = new BlobServiceClient(connectionString);
+            var blobContainerClient = blobServiceClient
+                .GetBlobContainerClient(message.ContainerName);
+            var blobClient = blobContainerClient
+                .GetBlobClient(message.FileName);
+
+            var blobProperties = await blobClient.GetPropertiesAsync();
+
+            logger.LogInformation($"BlobClient has eTag {blobProperties.Value.ETag} vs queued {message.ETag}");
+
+            logger.LogInformation($"Blob was updated on: {blobProperties.Value.LastModified}");
+            if (blobProperties.Value.Metadata != null && blobProperties.Value.Metadata.Any())
+            {
+                foreach (var (key, value) in blobProperties.Value.Metadata)
+                {
+                    logger.LogInformation($"    Metadata: {key} = {value}");
+                }
+            }
+
+            logger.LogInformation("Blob was updated on: {datetime}", blobProperties.Value.LastModified);
+
+            await using var stream = await blobClient.OpenReadAsync();
+            using var streamReader = new StreamReader(stream);
+            var content = await streamReader.ReadToEndAsync();
+            logger.LogInformation("Blob content: ");
+            logger.LogInformation(content);
         }
     }
 }

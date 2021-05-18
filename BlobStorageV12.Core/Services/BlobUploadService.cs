@@ -96,7 +96,7 @@ namespace BlobStorageV12.Core.Services
         {
             return new Dictionary<string, string>
             {
-                {"created_by", Environment.UserName}
+                { "created_by", Environment.UserName }
             };
         }
 

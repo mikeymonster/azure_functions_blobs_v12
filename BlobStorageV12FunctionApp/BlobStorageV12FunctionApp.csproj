@@ -6,14 +6,15 @@
     <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.9.0-beta.3" />
-    <PackageReference Include="Azure.Storage.Queues" Version="12.7.0-beta.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.9.0-beta.4" />
+    <PackageReference Include="Azure.Storage.Queues" Version="12.7.0-beta.4" />
+    <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage" Version="4.0.4" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.0.3" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk.Analyzers" Version="1.0.0" OutputItemType="Analyzer" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage.Blobs" Version="5.0.0-beta.2" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage.Blobs" Version="5.0.0-beta.3" />
     <!--<PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />-->
     <!--<PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="3.0.12" />-->
     <!--<PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.4" />-->
