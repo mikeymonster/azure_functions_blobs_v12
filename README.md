@@ -5,6 +5,9 @@
 The project was created as .NET Core 3.1, so it needs to be updated.
 
 ### Change project:
+
+> (This is obsolete and probably not needed for .NET 6.0)
+
 ```
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
