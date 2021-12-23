@@ -222,8 +222,7 @@ namespace BlobStorageV12FunctionApp
             logger.LogInformation($"Have queued message '{queueMessage}'");
             
             var message = System.Text.Json.JsonSerializer.Deserialize<BlobInfoMessage>(queueMessage);
-
-
+            
             var connectionString = Environment.GetEnvironmentVariable(BlobConnection);
             if (string.IsNullOrEmpty(connectionString))
             {

@@ -14,6 +14,7 @@ namespace BlobStorageV12.Core.Services
 {
     public interface IBlobUploadService
     {
+        Task UploadAndQueueFile(string path, string blobContainerName, string contentType);
         Task UploadFile(string path, string blobContainerName, string contentType);
     }
 
@@ -33,8 +34,30 @@ namespace BlobStorageV12.Core.Services
             //_logger.LogInformation($"BlobUploadService:: Blob Storage Connection = {_storageConfiguration.BlobStorageConnectionString}");
             //_logger.LogInformation($"BlobUploadService:: Queue Storage Connection = {_storageConfiguration.QueueStorageConnectionString}");
         }
-
+        
         public async Task UploadFile(string path, string blobContainerName, string contentType)
+        {
+            _logger.LogInformation($"Uploading file from path {path}");
+
+            var fileName = Path.GetFileName(path);
+
+            await using var fileStream = new FileStream(path, FileMode.Open);
+            //using var streamReader = new StreamReader(fileStream);
+
+            var blobClient = await GetBlobClient(
+                blobContainerName.ToLowerInvariant(),
+                fileName);
+
+            var metadata = GetMetadata();
+            //Upload blob
+            var blobContentInfo = await blobClient.UploadAsync(fileStream,
+                metadata: metadata,
+                httpHeaders: new BlobHttpHeaders { ContentType = contentType });
+
+            _logger.LogInformation($"Uploaded blob {blobContainerName}/{fileName} with etag {blobContentInfo.Value.ETag}");
+        }
+        
+        public async Task UploadAndQueueFile(string path, string blobContainerName, string contentType)
         {
             _logger.LogInformation($"Uploading file from path {path}");
 

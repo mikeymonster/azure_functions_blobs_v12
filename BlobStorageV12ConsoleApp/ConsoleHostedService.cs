@@ -51,12 +51,17 @@ namespace BlobStorageV12ConsoleApp
                             filePath = Console.ReadLine();
                         }
 
-                        const string defaultBlobContainerName = "to-be-queued";
+                        var useQueuedBlob = false;
+                        const string defaultBlobContainerName = "blob-test";
+                        const string defaultQueuedBlobContainerName = "to-be-queued-blob-queue";
                         const string contentTypeText = "text/plain";
 
                         if (!string.IsNullOrWhiteSpace(filePath))
                         {
-                            await _blobUploadService.UploadFile(filePath, defaultBlobContainerName, contentTypeText);
+                            if(useQueuedBlob)
+                                await _blobUploadService.UploadAndQueueFile(filePath, defaultQueuedBlobContainerName, contentTypeText);
+                                else 
+                                await _blobUploadService.UploadFile(filePath, defaultBlobContainerName, contentTypeText);
                         }
 
                         _exitCode = 0;
